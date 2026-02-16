@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  wa-decrypt:
+    build: .
+    restart: always
+    container_name: wa-decrypt
+    environment:
+      - PORT=3000
+      - API_KEY=${API_KEY}
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY=${R2_ACCESS_KEY}
+      - R2_SECRET_KEY=${R2_SECRET_KEY}
+      - R2_BUCKET=${R2_BUCKET}
+      - R2_PUBLIC_DOMAIN=${R2_PUBLIC_DOMAIN}
+    networks:
+      - root_default
+    # Traefik Labels
+    labels:
+      - "traefik.enable=true"
+      # Router Rule (Change decrypt.example.com to your actual domain)
+      - "traefik.http.routers.wa-decrypt.rule=Host(`decrypt.example.com`)"
+      - "traefik.http.routers.wa-decrypt.entrypoints=websecure"
+      # TLS Resolver (Change 'myresolver' to your actual resolver name from traefik config, often 'letsencrypt')
+      - "traefik.http.routers.wa-decrypt.tls.certresolver=myresolver"
+      # Service Port (Internal container port)
+      - "traefik.http.services.wa-decrypt.loadbalancer.server.port=3000"
+
+networks:
+  root_default:
+    external: true
