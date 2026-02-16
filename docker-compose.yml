@@ -16,15 +16,14 @@ services:
     networks:
       - root_default
     # Traefik Labels
-    labels:
-      - "traefik.enable=true"
-      # Router Rule (Change decrypt.example.com to your actual domain)
-      - "traefik.http.routers.wa-decrypt.rule=Host(`decrypt.example.com`)"
-      - "traefik.http.routers.wa-decrypt.entrypoints=websecure"
-      # TLS Resolver (Change 'myresolver' to your actual resolver name from traefik config, often 'letsencrypt')
-      - "traefik.http.routers.wa-decrypt.tls.certresolver=myresolver"
-      # Service Port (Internal container port)
-      - "traefik.http.services.wa-decrypt.loadbalancer.server.port=3000"
+labels:
+      - traefik.enable=true
+      - traefik.http.routers.wa-decrypt.rule=Host(`service.waappa.com`)
+      - traefik.http.routers.wa-decrypt.entrypoints=websecure
+      - traefik.http.routers.wa-decrypt.tls=true
+      - traefik.http.routers.wa-decrypt.tls.certresolver=mytlschallenge
+      - traefik.http.services.wa-decrypt.loadbalancer.server.port=3000
+
 
 networks:
   root_default:
